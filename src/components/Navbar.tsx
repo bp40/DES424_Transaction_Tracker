@@ -39,10 +39,12 @@ const Navbar = () => {
                         </Link>
                     </nav>
                     <div className="flex items-center gap-4">
-                        <Button variant="outline" size="sm">
-                            Sign in
+                        <Button variant="outline" size="sm" >
+                            <Link href="/auth/login" className="flex items-center gap-2"> Sign In </Link>
                         </Button>
-                        <Button size="sm">Sign up</Button>
+                        <Button size="sm" >
+                            <Link href="/auth/signup" className="flex items-center gap-2"> Sign Up </Link>
+                        </Button>
                     </div>
                 </div>
             </div>
