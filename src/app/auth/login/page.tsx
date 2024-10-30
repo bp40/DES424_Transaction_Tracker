@@ -14,16 +14,19 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link";
 import {login} from "@/app/auth/login/actions";
 import {useState} from "react";
+import {useRouter} from "next/navigation";
 
 
 const LoginPage = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const router = useRouter()
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        login(email, password)
+        login(email, password).then(r => router.push('/dashboard'))
+
     };
 
     return (

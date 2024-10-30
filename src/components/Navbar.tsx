@@ -4,30 +4,50 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import {useEffect, useState} from "react";
 import {createClient} from "@/utils/supabase/client";
+import {useRouter} from "next/navigation";
 
 const Navbar = () => {
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [session, setSession] = useState<Session | null>(null);
+
     const supabase = createClient()
+    const router = useRouter()
 
     useEffect(() => {
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setSession(session);
+        });
 
-        const fetchUser = async () => {
-            const {data: {user}} = await supabase.auth.getUser()
+        // Check the initial session
+        const fetchSession = async () => {
+            const { data } = await supabase.auth.getSession();
+            setSession(data.session);
+        };
 
-            if (user) {
-                setIsLoggedIn(true)
-            } else {
-                setIsLoggedIn(false)
-            }
+        fetchSession();
 
+        return () => {
+            subscription.unsubscribe();
+        };
+    }, []);
+
+    const handleSignout = async () => {
+
+        const {
+            data: { user },
+        } = await supabase.auth.getUser()
+
+        if (user) {
+            await supabase.auth.signOut()
         }
-        fetchUser()
+
+        setSession(null)
+        router.push("/")
+        router.refresh()
+    }
 
 
-    }, [isLoggedIn])
-
-    if (!isLoggedIn) {
+    if (!session) {
         return (
             <nav className="fixed inset-x-0 top-0 z-50 bg-white shadow-sm dark:bg-gray-950/90">
                 <div className="w-full max-w-7xl mx-auto px-4">
@@ -114,9 +134,7 @@ const Navbar = () => {
                             </Link>
                         </nav>
                         <div className="flex items-center gap-4">
-                            <Button variant="outline" size="sm">
-                                <Link href="/auth/logout" className="flex items-center gap-2"> Logout </Link>
-                            </Button>
+                            <Button variant="outline" size="sm" onClick={handleSignout} > Sign out </Button>
                         </div>
                     </div>
                 </div>
