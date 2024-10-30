@@ -1,9 +1,10 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-import DashboardCard from "@/components/ui/DashboardCard";
+import DashboardCard from "@/components/DashboardCard";
 import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {IncomeChart} from "@/components/IncomeChart";
+import TransactionListBlock from "@/components/TransactionListBlock";
 
 
 const Dashboard = async () => {
@@ -24,35 +25,41 @@ const Dashboard = async () => {
                     <Button variant="outline" className="px-2"> Add Transaction</Button>
                 </div>
             </div>
-            <div className="flex flex-wrap h-screen sm:grid sm:grid-cols-5 sm:grid-rows-5 mx-6 my-4">
-                <DashboardCard
-                    className='col-start-1 col-end-2 row-start-1 row-end-2'
-                    title="Last Month Income"
-                    amount={8000}
-                    percentage={8}
-                />
-                <DashboardCard
-                    className='col-start-2 col-end-3 row-start-1 row-end-2'
-                    title="Last Month Expense"
-                    amount={6835}
-                    percentage={-12}
-                />
-                <DashboardCard
-                    className='col-start-1 col-end-2 row-start-2 row-end-3'
-                    title="Recurring Expenses"
-                    amount={349}
-                    percentage={0}
-                />
-                <DashboardCard
-                    className='col-start-2 col-end-3 row-start-2 row-end-3'
-                    title="Most Spent Category"
-                    amount={0}
-                    percentage={0}
-                />
+            <div className="flex flex-wrap h-screen sm:grid sm:grid-cols-5 sm:grid-rows-5 gap-4 content-center m-8">
+                <div className="grid grid-cols-subgrid gap-4 col-span-2 row-span-2 h-full">
+                    <DashboardCard
+                        className='col-start-1 col-end-2 row-start-1 row-end-2 h-full'
+                        title="Last Month Income"
+                        amount={8000}
+                        percentage={8}
+                    />
+                    <DashboardCard
+                        className='col-start-2 col-end-3 row-start-1 row-end-2'
+                        title="Last Month Expense"
+                        amount={6835}
+                        percentage={-12}
+                    />
+                    <DashboardCard
+                        className='col-start-1 col-end-2 row-start-2 row-end-3'
+                        title="Recurring Expenses"
+                        amount={349}
+                        percentage={0}
+                    />
+                    <DashboardCard
+                        className='col-start-2 col-end-3 row-start-2 row-end-3'
+                        title="Most Spent Category"
+                        amount={0}
+                        percentage={0}
+                    />
+                </div>
                 <Card className="col-start-1 col-end-3 row-start-3 row-end-6 m-2">
                     <CardHeader>
                         <CardTitle>Recent Transactions</CardTitle>
                     </CardHeader>
+                    <CardContent>
+                        <TransactionListBlock amount={299} category="Food" payee="Some Restaurant" expense={true}/>
+                        <TransactionListBlock amount={15000} category="Income" payee="Job" expense={false}/>
+                    </CardContent>
                 </Card>
                 <div className="col-start-3 col-end-6 row-start-1 row-end-4 m-2">
                     <IncomeChart/>
@@ -63,7 +70,7 @@ const Dashboard = async () => {
                             <CardTitle> Transaction Trends </CardTitle>
                         </CardHeader>
                         <CardContent>
-                            Test
+
                         </CardContent>
                     </Card>
                 </div>
