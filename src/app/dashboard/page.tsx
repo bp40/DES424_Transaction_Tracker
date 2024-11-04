@@ -5,6 +5,8 @@ import {Button} from "@/components/ui/button";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {IncomeChart} from "@/components/IncomeChart";
 import TransactionListBlock from "@/components/TransactionListBlock";
+import {Dialog, DialogTrigger} from "@/components/ui/dialog";
+import ManualAddTxModalButton from "@/app/dashboard/ManualAddTxModalButton";
 
 
 const Dashboard = async () => {
@@ -22,7 +24,7 @@ const Dashboard = async () => {
                 <h1 className="mx-6 scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-3xl "> Welcome, {data.user.email} </h1>
                 <div>
                     <Button className="mx-2"> Import from QR-Payment Slip</Button>
-                    <Button variant="outline" className="px-2"> Add Transaction</Button>
+                    <ManualAddTxModalButton/>
                 </div>
             </div>
             <div className="flex flex-wrap h-screen sm:grid sm:grid-cols-5 sm:grid-rows-5 gap-4 content-center m-8">
