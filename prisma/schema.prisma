@@ -12,3 +12,102 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+// Define the enum for transaction types
+enum TransactionType {
+  Income
+  Expense
+}
+
+// User model
+model User {
+  id             Int            @id @default(autoincrement())
+  supabaseId     String         @unique
+  username       String
+  budgets        Budget[]
+  notifications  Notification[]
+  transactions   Transaction[]
+  userCategories UserCategory[]
+  createdAt      DateTime       @default(now())
+}
+
+// Category model
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+
+  // Relations
+  budgets      Budget[]
+  transactions Transaction[]
+}
+
+// UserCategory model
+model UserCategory {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  name      String
+  createdAt DateTime @default(now())
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id])
+  budgets      Budget[]
+  transactions Transaction[]
+
+  @@index([userId]) // Index for userId
+}
+
+// Budget model
+model Budget {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  categoryId     Int? // Nullable
+  userCategoryId Int? // Nullable
+  amount         Decimal  @db.Decimal(10, 2)
+  year           Int
+  month          Int
+  createdAt      DateTime @default(now())
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id])
+  category     Category?     @relation(fields: [categoryId], references: [id]) // Nullable
+  userCategory UserCategory? @relation(fields: [userCategoryId], references: [id]) // Nullable
+
+  @@index([userId]) // Index for userId
+}
+
+// Notification model
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  message   String
+  isRead    Boolean
+  isDeleted Boolean
+  createdAt DateTime @default(now())
+
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId]) // Index for userId
+}
+
+// Transaction model
+model Transaction {
+  id             Int             @id @default(autoincrement())
+  userId         Int
+  categoryId     Int? // Nullable
+  userCategoryId Int? // Nullable
+  date           DateTime
+  amount         Decimal         @db.Decimal(10, 2)
+  note           String?
+  type           TransactionType
+  payee          String          @default("")
+  createdAt      DateTime        @default(now())
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id])
+  category     Category?     @relation(fields: [categoryId], references: [id]) // Nullable
+  userCategory UserCategory? @relation(fields: [userCategoryId], references: [id]) // Nullable
+
+  @@index([date, categoryId, userCategoryId]) // Index for date, categoryId, userCategoryId
+}
