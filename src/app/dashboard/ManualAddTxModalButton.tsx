@@ -29,7 +29,7 @@ const ManualAddTxModalButton = () => {
             message: "Amount must be greater than 0"
         }),
         category: z.enum(categories),
-        date: z.string().refine(date => !isNaN(Date.parse(date)), { message: "Invalid date" }),
+        date: z.string().refine(date => !isNaN(Date.parse(date)), {message: "Invalid date"}),
         method: z.enum(methods),
         merchant: z.string(),
         expense: z.boolean(),
@@ -75,20 +75,20 @@ const ManualAddTxModalButton = () => {
                                     <FormControl>
                                         <Input type="number" {...field} />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
                         <FormField
                             control={form.control}
                             name="expense"
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Type</FormLabel>
                                     <Select onValueChange={(value) => field.onChange(value === 'true')}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue value={field.value} placeholder="Expense" />
+                                                <SelectValue value={field.value} placeholder="Expense"/>
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
@@ -96,7 +96,7 @@ const ManualAddTxModalButton = () => {
                                             <SelectItem value="false">Income</SelectItem>
                                         </SelectContent>
                                     </Select>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -118,7 +118,7 @@ const ManualAddTxModalButton = () => {
                                             ))}
                                         </SelectContent>
                                     </Select>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -132,7 +132,7 @@ const ManualAddTxModalButton = () => {
                                         <FormControl>
                                             <Input type="date" {...field} />
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
@@ -154,7 +154,7 @@ const ManualAddTxModalButton = () => {
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>)}
                             />
                         </div>
@@ -167,7 +167,7 @@ const ManualAddTxModalButton = () => {
                                     <FormControl>
                                         <Input type="text" {...field} />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
@@ -180,7 +180,7 @@ const ManualAddTxModalButton = () => {
                                     <FormControl>
                                         <Input type="text" {...field} />
                                     </FormControl>
-                                    <FormMessage />
+                                    <FormMessage/>
                                 </FormItem>
                             )}
                         />
