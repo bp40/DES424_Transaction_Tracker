@@ -19,8 +19,8 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 
 const ManualAddTxModalButton = () => {
 
-    const categories = ["Food", "Entertainment", "Transportation"]
-    const methods = ["Cash", "Credit Card", "Bank Transfer", "Debit Card"]
+    const categories = ["Food", "Entertainment", "Transportation"] as const
+    const methods = ["Cash", "Credit Card", "Bank Transfer", "Debit Card"] as const
 
     const formSchema = z.object({
         amount: z.coerce.number({
