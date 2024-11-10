@@ -9,6 +9,8 @@ import ManualAddTxModalButton from "@/app/dashboard/ManualAddTxModalButton";
 import {useEffect, useState} from "react";
 import {Spinner} from "@/components/ui/spinner";
 
+import {z} from "zod";
+
 interface Category {
     name: string;
 }
@@ -74,11 +76,27 @@ const Dashboard = () => {
             })
     }, [])
 
+    const methods = ["Cash", "Credit Card", "Bank Transfer", "Debit Card"] as const
+
+    const formSchema = z.object({
+        amount: z.coerce.number({
+            required_error: "Amount is required"
+        }).min(1, {
+            message: "Amount must be greater than 0"
+        }),
+        category: z.number(),
+        date: z.string().refine(date => !isNaN(Date.parse(date)), {message: "Invalid date"}),
+        method: z.enum(methods),
+        payee: z.string(),
+        expense: z.boolean(),
+        note: z.string(),
+    });
 
     return (
         <div className="py-20 h-screen justify-center">
             <div className="flex justify-between items-center mx-6">
-                <h1 className="mx-6 scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-3xl "> Welcome, user! </h1>
+                <h1 className="mx-6 scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-3xl "> Welcome,
+                    user! </h1>
                 <div>
                     <Button className="mx-2"> Import from QR-Payment Slip</Button>
                     <ManualAddTxModalButton/>
@@ -103,7 +121,7 @@ const Dashboard = () => {
 
                     {isTransactionsLoading ? (
                         <div className="flex justify-center items-center">
-                            <Spinner show={true} size="large" />
+                            <Spinner show={true} size="large"/>
                         </div>
                     ) : isError ? (
                         <div className="flex justify-center items-center">

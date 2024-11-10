@@ -64,12 +64,6 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
     const data = await request.json()
 
-    // TODO: schema should be fixed to be unique later
-    const category = await prisma.category.findFirst({
-        where: {
-            name: data.category
-        }
-    })
 
     try {
 
@@ -77,7 +71,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
             data: {
                 userId: user.id,
                 amount: data.amount,
-                categoryId: category?.id,
+                categoryId: data.category,
                 date: data.date,
                 note: data.note ? data.note : null,
                 payee: data.payee,

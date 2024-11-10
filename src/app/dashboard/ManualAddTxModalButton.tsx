@@ -18,16 +18,23 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 import {revalidatePath} from "next/cache";
 import {useEffect, useState} from "react";
 
+interface Category {
+    id: number;
+    name: string;
+    createdAt: string; // ISO string format for the created date
+}
+
+type CategoryList = Category[];
 
 const ManualAddTxModalButton = () => {
 
-    const [categories, setCategories] = useState([])
+    const [categories, setCategories] = useState<CategoryList>([])
 
     useEffect(() => {
         fetch("/api/categories")
             .then(res => res.json())
             .then(data => {
-                setCategories(data.map((category: { name: string; }) => category.name))
+                setCategories(data)
             })
             .catch(err => {
                 console.log(err)
@@ -42,7 +49,7 @@ const ManualAddTxModalButton = () => {
         }).min(1, {
             message: "Amount must be greater than 0"
         }),
-        category: z.enum(categories),
+        category: z.string(),
         date: z.string().refine(date => !isNaN(Date.parse(date)), {message: "Invalid date"}),
         method: z.enum(methods),
         merchant: z.string(),
@@ -54,7 +61,7 @@ const ManualAddTxModalButton = () => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             amount: 0,
-            category: "Food",
+            category: "1",
             date: "",
             method: "Bank Transfer",
             merchant: "",
@@ -67,7 +74,7 @@ const ManualAddTxModalButton = () => {
     function onSubmit(values: z.infer<typeof formSchema>) {
         const data = {
             amount: values.amount,
-            category: values.category,
+            category: parseInt(values.category),
             date: new Date(values.date).toISOString(),
             method: values.method,
             payee: values.merchant,
@@ -91,7 +98,6 @@ const ManualAddTxModalButton = () => {
                 console.log(err)
             })
 
-        revalidatePath('/dashboard')
     }
 
     return (
@@ -127,7 +133,7 @@ const ManualAddTxModalButton = () => {
                                     <Select onValueChange={(value) => field.onChange(value === 'true')}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue value={field.value} placeholder="Expense"/>
+                                                <SelectValue placeholder="Expense"/>
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
@@ -145,7 +151,7 @@ const ManualAddTxModalButton = () => {
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Category</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value.toString()}>
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select a category"/>
@@ -153,7 +159,8 @@ const ManualAddTxModalButton = () => {
                                         </FormControl>
                                         <SelectContent>
                                             {categories.map((category) => (
-                                                <SelectItem value={category} key={category}>{category}</SelectItem>
+                                                <SelectItem value={category.id.toString()}
+                                                            key={category.id}>{category.name}</SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
