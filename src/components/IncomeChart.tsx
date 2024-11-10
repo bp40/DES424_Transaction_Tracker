@@ -15,14 +15,15 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
+import {useEffect, useState} from "react";
 
-const chartData = [
-    {month: "February", income: 305, expense: 200},
-    {month: "March", income: 237, expense: 120},
-    {month: "April", income: 73, expense: 190},
-    {month: "May", income: 209, expense: 130},
-    {month: "June", income: 214, expense: 140},
-]
+interface MonthlyData {
+    month: string;
+    income: number;
+    expense: number;
+}
+
+type ChartData = MonthlyData[];
 
 const chartConfig = {
     income: {
@@ -36,11 +37,42 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function IncomeChart() {
+
+    const [chartData, setChartData] = useState<ChartData>([]);
+    const [error, setError] = useState("");
+
+    const dateOptions = { day: '2-digit', month: 'short', year: 'numeric' };
+    const currentMonth = new Date().getMonth();  // Zero-indexed month
+    const [currentDate, setCurrentDate] = useState(currentMonth + 1); // 1-based month
+
+    const [fromDate, setFromDate] = useState(new Date(new Date().setMonth(currentDate - 6)).setDate(1));
+    const [fromDateString, setFromDateString] = useState(new Intl.DateTimeFormat('en-US', dateOptions).format(fromDate));
+    const [currentDateString, setCurrentDateString] = useState(new Intl.DateTimeFormat('en-US', dateOptions).format(new Date()));
+
+    useEffect(() => {
+        const fromDateISOString = new Date(fromDate).toISOString();
+        const toDateISOString = new Date().toISOString();
+
+        fetch(`/api/summary/range?from=${fromDateISOString}&to=${toDateISOString}`)
+            .then(res => res.json())
+            .then((data: MonthlyData[]) => {
+                setChartData(data.map(month => ({
+                    month: month.month,
+                    income: month.income,
+                    expense: month.expense,
+                })));
+            })
+            .catch(err => {
+                console.error(err);
+                setError("Failed to fetch data");
+            });
+    }, [currentDate, fromDate]);
+
     return (
         <Card className="mb-2 max-h-full">
             <CardHeader>
                 <CardTitle> Income / Expense Overview</CardTitle>
-                <CardDescription> February - June 2024</CardDescription>
+                <CardDescription> From  {fromDateString} to {currentDateString}</CardDescription>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig} className="min-h-[200px] max-h-fit w-full">

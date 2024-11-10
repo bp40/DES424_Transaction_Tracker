@@ -16,7 +16,7 @@ const Dashboard = () => {
         {title: "Last Month Income", amount: 0, percentage: 0},
         {title: "Last Month Expense", amount: 0, percentage: 0},
         {title: "Recurring Expenses", amount: 0, percentage: 0},
-        {title: "Most Spent Category", amount: 0, percentage: 0},
+        {title: "Net Income", amount: 0, percentage: 0},
     ])
 
     const [transactions, setTransactions] = useState([])
@@ -44,7 +44,7 @@ const Dashboard = () => {
                     {title: "Last Month Income", amount: data.lastMonthIncome, percentage: 0},
                     {title: "Last Month Expense", amount: data.lastMonthExpense, percentage: 0},
                     {title: "Recurring Expenses", amount: data.lastMonthRecurringExpense, percentage: 0},
-                    {title: "Most Spent Category", amount: 0, percentage: 0},
+                    {title: "Net Income", amount: data.NetIncome, percentage: 0},
                 ])
                 setIsSummaryLoading(false)
             })
