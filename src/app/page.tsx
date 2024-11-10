@@ -1,8 +1,11 @@
+import Navbar from "@/components/Navbar";
+import HeroSectionWithImage from "@/components/HeroSection";
+
 const Home = () => {
   return (
-    <h1 className="p-2">
-      Hello, this is the home page
-    </h1>
+      <div>
+          <HeroSectionWithImage/>
+      </div>
   )
 }
 
