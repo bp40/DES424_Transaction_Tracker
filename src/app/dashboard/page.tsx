@@ -9,6 +9,26 @@ import ManualAddTxModalButton from "@/app/dashboard/ManualAddTxModalButton";
 import {useEffect, useState} from "react";
 import {Spinner} from "@/components/ui/spinner";
 
+interface Category {
+    name: string;
+}
+
+interface Transaction {
+    id: number;
+    userId: number;
+    categoryId: number;
+    userCategoryId: number | null;
+    date: string; // ISO string format for the date
+    amount: string;
+    note: string | null;
+    type: "Expense" | "Income" | "RecurringExpense"; // Assuming type can be either "Expense" or "Income"
+    payee: string;
+    createdAt: string; // ISO string format for the created date
+    category: Category;
+    userCategory: Category | null; // Assuming userCategory is either null or a Category
+}
+
+type TransactionList = Transaction[];
 
 const Dashboard = () => {
 
@@ -19,7 +39,7 @@ const Dashboard = () => {
         {title: "Net Income", amount: 0, percentage: 0},
     ])
 
-    const [transactions, setTransactions] = useState([])
+    const [transactions, setTransactions] = useState<TransactionList>([])
     const [isTransactionsLoading, setIsTransactionsLoading] = useState(true)
     const [isSummaryLoading, setIsSummaryLoading] = useState(true)
     const [isError, setIsError] = useState(false)
@@ -94,7 +114,7 @@ const Dashboard = () => {
                             {transactions.map((transaction) => (
                                 <TransactionListBlock
                                     key={transaction.id}
-                                    amount={transaction.amount}
+                                    amount={parseInt(transaction.amount)}
                                     payee={transaction.payee}
                                     category={transaction.category.name}
                                     expense={transaction.type === 'Expense' || transaction.type === 'RecurringExpense'}

@@ -9,36 +9,38 @@ export async function GET(request: NextRequest, response: NextResponse) {
         return NextResponse.json({message: "Error fetching user"}, {status: 401})
     }
 
-    const user = prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
         where: {
             supabaseId: supabaseId
         }
     })
 
-    const transactions = await prisma.transaction.findMany({
-        where: {
-            userId: user.id
-        },
-        take: 10,
-        orderBy: {
-            date: 'desc'
-        },
-        include: {
-            category: {
-                select: {
-                    name: true
-                }
+    if (user) {
+        const transactions = await prisma.transaction.findMany({
+            where: {
+                userId: user.id
             },
-            userCategory: {
-                select: {
-                    name: true
+            take: 10,
+            orderBy: {
+                date: 'desc'
+            },
+            include: {
+                category: {
+                    select: {
+                        name: true
+                    }
+                },
+                userCategory: {
+                    select: {
+                        name: true
+                    }
                 }
             }
-        }
-    });
+        });
+        return NextResponse.json(transactions)
+    }
 
-
-    return NextResponse.json(transactions)
+    return NextResponse.json({message: 'Error fetching user or user transactions'}, {status: 500})
 }
 
 export async function POST(request: NextRequest, response: NextResponse) {

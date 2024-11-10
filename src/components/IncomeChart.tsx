@@ -43,7 +43,7 @@ export function IncomeChart() {
     const [error, setError] = useState("");
     const [chartIsLoading, setChartIsLoading] = useState(true);
 
-    const dateOptions = {day: '2-digit', month: 'short', year: 'numeric'};
+    const dateOptions: Intl.DateTimeFormatOptions = {day: '2-digit', month: 'short', year: 'numeric'};
     const currentMonth = new Date().getMonth();  // Zero-indexed month
     const [currentDate, setCurrentDate] = useState(currentMonth + 1); // 1-based month
 
