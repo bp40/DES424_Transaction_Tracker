@@ -15,6 +15,7 @@ import {useForm} from "react-hook-form";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {revalidatePath} from "next/cache";
 
 
 const ManualAddTxModalButton = () => {
@@ -51,8 +52,33 @@ const ManualAddTxModalButton = () => {
 
 
     function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
-        form.reset()
+        const data = {
+            amount: values.amount,
+            category: values.category,
+            date: new Date(values.date).toISOString(),
+            method: values.method,
+            payee: values.merchant,
+            expense: values.expense,
+            note: values.note,
+        }
+
+        fetch("/api/transactions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                form.reset()
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+        revalidatePath('/dashboard')
     }
 
     return (

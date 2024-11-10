@@ -57,15 +57,22 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
     const data = await request.json()
 
+    // TODO: schema should be fixed to be unique later
+    const category = await prisma.category.findFirst({
+        where: {
+            name: data.category
+        }
+    })
+
     try {
 
         const transaction = await prisma.transaction.create({
             data: {
                 userId: user.id,
                 amount: data.amount,
-                categoryId: data.category,
+                categoryId: category?.id,
                 date: data.date,
-                note: data.note,
+                note: data.note ? data.note : null,
                 payee: data.payee,
                 type: data.expense ? "Expense" : "Income",
             },
