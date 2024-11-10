@@ -20,6 +20,13 @@ enum TransactionType {
   RecurringExpense
 }
 
+enum TransactionMethod {
+  Cash
+  CreditCard
+  BankTransfer
+  DebitCard
+}
+
 // User model
 model User {
   id             Int            @id @default(autoincrement())
@@ -94,16 +101,17 @@ model Notification {
 
 // Transaction model
 model Transaction {
-  id             Int             @id @default(autoincrement())
+  id             Int               @id @default(autoincrement())
   userId         Int
   categoryId     Int? // Nullable
   userCategoryId Int? // Nullable
   date           DateTime
-  amount         Decimal         @db.Decimal(10, 2)
+  amount         Decimal           @db.Decimal(10, 2)
   note           String?
+  method         TransactionMethod?
   type           TransactionType
-  payee          String          @default("")
-  createdAt      DateTime        @default(now())
+  payee          String            @default("")
+  createdAt      DateTime          @default(now())
 
   // Relations
   user         User          @relation(fields: [userId], references: [id])

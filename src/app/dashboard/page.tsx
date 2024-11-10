@@ -10,6 +10,7 @@ import {useEffect, useState} from "react";
 import {Spinner} from "@/components/ui/spinner";
 
 import {z} from "zod";
+import {redirect, useRouter} from "next/navigation";
 
 interface Category {
     name: string;
@@ -45,6 +46,8 @@ const Dashboard = () => {
     const [isTransactionsLoading, setIsTransactionsLoading] = useState(true)
     const [isSummaryLoading, setIsSummaryLoading] = useState(true)
     const [isError, setIsError] = useState(false)
+
+    const router = useRouter()
 
     useEffect(() => {
         fetch("/api/transactions")
@@ -116,7 +119,12 @@ const Dashboard = () => {
                 </div>
                 <Card className="col-start-1 col-end-3 row-start-3 row-end-6 m-2">
                     <CardHeader>
-                        <CardTitle>Recent Transactions</CardTitle>
+                        <CardTitle
+                            onClick={() => router.push("/transactions")}
+                            className="cursor-pointer hover:underline"
+                        >
+                            Recent Transactions
+                        </CardTitle>
                     </CardHeader>
 
                     {isTransactionsLoading ? (
@@ -128,17 +136,22 @@ const Dashboard = () => {
                             <p className="text-red-500">Error loading transactions</p>
                         </div>
                     ) : (
-                        <CardContent>
-                            {transactions.map((transaction) => (
-                                <TransactionListBlock
-                                    key={transaction.id}
-                                    amount={parseInt(transaction.amount)}
-                                    payee={transaction.payee}
-                                    category={transaction.category.name}
-                                    expense={transaction.type === 'Expense' || transaction.type === 'RecurringExpense'}
-                                />
-                            ))}
-                        </CardContent>
+                        transactions.length > 0 ? (
+                                <CardContent>
+                                    {transactions.map((transaction) => (
+                                        <TransactionListBlock
+                                            key={transaction.id}
+                                            amount={parseInt(transaction.amount)}
+                                            payee={transaction.payee}
+                                            category={transaction.category.name}
+                                            expense={transaction.type === 'Expense' || transaction.type === 'RecurringExpense'}
+                                        />
+                                    ))}
+                                </CardContent>) :
+                            <div className="flex justify-center items-center">
+                                <p className="text-gray-500">No transactions found</p>
+                            </div>
+
                     )}
                 </Card>
                 <div className="col-start-3 col-end-6 row-start-1 row-end-4 m-2">

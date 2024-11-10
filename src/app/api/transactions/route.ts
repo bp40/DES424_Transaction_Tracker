@@ -9,6 +9,8 @@ export async function GET(request: NextRequest, response: NextResponse) {
         return NextResponse.json({message: "Error fetching user"}, {status: 401})
     }
 
+    const startFromIndex = parseInt(<string>request.nextUrl.searchParams.get("index")) || 0;
+
     const user = await prisma.user.findUnique({
         where: {
             supabaseId: supabaseId
@@ -21,6 +23,7 @@ export async function GET(request: NextRequest, response: NextResponse) {
                 userId: user.id
             },
             take: 10,
+            skip: startFromIndex,
             orderBy: {
                 date: 'desc'
             },
@@ -75,6 +78,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
                 date: data.date,
                 note: data.note ? data.note : null,
                 payee: data.payee,
+                method: data.method,
                 type: data.expense ? "Expense" : "Income",
             },
         })

@@ -15,7 +15,6 @@ import {useForm} from "react-hook-form";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {revalidatePath} from "next/cache";
 import {useEffect, useState} from "react";
 
 interface Category {
@@ -41,7 +40,12 @@ const ManualAddTxModalButton = () => {
             })
     }, [])
 
-    const methods = ["Cash", "Credit Card", "Bank Transfer", "Debit Card"] as const
+    const methods = [
+        { label: "Cash", value: "Cash" },
+        { label: "Credit Card", value: "CreditCard" },
+        { label: "Bank Transfer", value: "BankTransfer" },
+        { label: "Debit Card", value: "DebitCard" }
+    ] as const;
 
     const formSchema = z.object({
         amount: z.coerce.number({
@@ -51,7 +55,7 @@ const ManualAddTxModalButton = () => {
         }),
         category: z.string(),
         date: z.string().refine(date => !isNaN(Date.parse(date)), {message: "Invalid date"}),
-        method: z.enum(methods),
+        method: z.enum(["Cash", "CreditCard", "BankTransfer", "DebitCard"]).default("BankTransfer"),
         merchant: z.string(),
         expense: z.boolean(),
         note: z.string(),
@@ -63,7 +67,7 @@ const ManualAddTxModalButton = () => {
             amount: 0,
             category: "1",
             date: "",
-            method: "Bank Transfer",
+            method: "BankTransfer",
             merchant: "",
             expense: true,
             note: "",
@@ -81,6 +85,8 @@ const ManualAddTxModalButton = () => {
             expense: values.expense,
             note: values.note,
         }
+
+        console.log(data)
 
         fetch("/api/transactions", {
             method: "POST",
@@ -185,23 +191,26 @@ const ManualAddTxModalButton = () => {
                             <FormField
                                 control={form.control}
                                 name="method"
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Method</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <Select onValueChange={field.onChange} value={field.value}>
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="Select a method"/>
+                                                    <SelectValue>{field.value ? methods.find(method => method.value === field.value)?.label : "Select a method"}</SelectValue>
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
                                                 {methods.map((method) => (
-                                                    <SelectItem value={method} key={method}>{method}</SelectItem>
+                                                    <SelectItem value={method.value} key={method.value}>
+                                                        {method.label}
+                                                    </SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
-                                        <FormMessage/>
-                                    </FormItem>)}
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
                         </div>
                         <FormField
