@@ -12,15 +12,16 @@ import {Spinner} from "@/components/ui/spinner";
 
 const Dashboard = () => {
 
-    const cardInfo = [
-        {title: "Last Month Income", amount: 8000, percentage: 8},
-        {title: "Last Month Expense", amount: 6835, percentage: -12},
-        {title: "Recurring Expenses", amount: 349, percentage: 0},
+    const [summaryInfo, setSummaryInfo] = useState([
+        {title: "Last Month Income", amount: 0, percentage: 0},
+        {title: "Last Month Expense", amount: 0, percentage: 0},
+        {title: "Recurring Expenses", amount: 0, percentage: 0},
         {title: "Most Spent Category", amount: 0, percentage: 0},
-    ]
+    ])
 
     const [transactions, setTransactions] = useState([])
-    const [isLoading, setIsLoading] = useState(true)
+    const [isTransactionsLoading, setIsTransactionsLoading] = useState(true)
+    const [isSummaryLoading, setIsSummaryLoading] = useState(true)
     const [isError, setIsError] = useState(false)
 
     useEffect(() => {
@@ -28,11 +29,28 @@ const Dashboard = () => {
             .then(res => res.json())
             .then(data => {
                 setTransactions(data)
-                setIsLoading(false)
+                setIsTransactionsLoading(false)
             })
             .catch(err => {
                 setIsError(true)
-                setIsLoading(false)
+                setIsTransactionsLoading(false)
+            })
+
+        // TODO: Add percentages logic
+        fetch("/api/summary")
+            .then(res => res.json())
+            .then(data => {
+                setSummaryInfo([
+                    {title: "Last Month Income", amount: data.lastMonthIncome, percentage: 0},
+                    {title: "Last Month Expense", amount: data.lastMonthExpense, percentage: 0},
+                    {title: "Recurring Expenses", amount: data.lastMonthRecurringExpense, percentage: 0},
+                    {title: "Most Spent Category", amount: 0, percentage: 0},
+                ])
+                setIsSummaryLoading(false)
+            })
+            .catch(err => {
+                console.log(err)
+                setIsSummaryLoading(false)
             })
     }, [])
 
@@ -48,11 +66,12 @@ const Dashboard = () => {
             </div>
             <div className="flex flex-wrap h-screen sm:grid sm:grid-cols-5 sm:grid-rows-5 gap-4 content-center m-8">
                 <div className="grid grid-cols-subgrid gap-4 col-span-2 row-span-2 h-full">
-                    {cardInfo.map((info) => (
+                    {summaryInfo.map((info) => (
                         <DashboardCard
                             amount={info.amount}
                             percentage={info.percentage}
                             title={info.title}
+                            isLoading={isSummaryLoading}
                             key={info.title}
                         />
                     ))}
@@ -62,7 +81,7 @@ const Dashboard = () => {
                         <CardTitle>Recent Transactions</CardTitle>
                     </CardHeader>
 
-                    {isLoading ? (
+                    {isTransactionsLoading ? (
                         <div className="flex justify-center items-center">
                             <Spinner show={true} size="large" />
                         </div>
@@ -78,7 +97,7 @@ const Dashboard = () => {
                                     amount={transaction.amount}
                                     payee={transaction.payee}
                                     category={transaction.category.name}
-                                    expense={transaction.type === 'Expense'}
+                                    expense={transaction.type === 'Expense' || transaction.type === 'RecurringExpense'}
                                 />
                             ))}
                         </CardContent>
