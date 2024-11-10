@@ -7,6 +7,7 @@ import {IncomeChart} from "@/components/IncomeChart";
 import TransactionListBlock from "@/components/TransactionListBlock";
 import ManualAddTxModalButton from "@/app/dashboard/ManualAddTxModalButton";
 import {useEffect, useState} from "react";
+import {Spinner} from "@/components/ui/spinner";
 
 
 const Dashboard = () => {
@@ -19,13 +20,20 @@ const Dashboard = () => {
     ]
 
     const [transactions, setTransactions] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
+    const [isError, setIsError] = useState(false)
 
     useEffect(() => {
-        async function getTransactions() {
-            const transactions = await fetch("/api/transactions").then(res => res.json())
-            setTransactions(transactions)
-        }
-        getTransactions()
+        fetch("/api/transactions")
+            .then(res => res.json())
+            .then(data => {
+                setTransactions(data)
+                setIsLoading(false)
+            })
+            .catch(err => {
+                setIsError(true)
+                setIsLoading(false)
+            })
     }, [])
 
 
@@ -53,15 +61,28 @@ const Dashboard = () => {
                     <CardHeader>
                         <CardTitle>Recent Transactions</CardTitle>
                     </CardHeader>
-                    <CardContent>
 
-                        {transactions.map((transaction) => (<TransactionListBlock key={transaction.id}
-                                                                                  amount={transaction.amount}
-                                                                                  payee={transaction.payee}
-                                                                                  category={transaction.category.name}
-                                                                                  expense={transaction.type === "Expense"}/>))}
-
-                    </CardContent>
+                    {isLoading ? (
+                        <div className="flex justify-center items-center">
+                            <Spinner show={true} size="large" />
+                        </div>
+                    ) : isError ? (
+                        <div className="flex justify-center items-center">
+                            <p className="text-red-500">Error loading transactions</p>
+                        </div>
+                    ) : (
+                        <CardContent>
+                            {transactions.map((transaction) => (
+                                <TransactionListBlock
+                                    key={transaction.id}
+                                    amount={transaction.amount}
+                                    payee={transaction.payee}
+                                    category={transaction.category.name}
+                                    expense={transaction.type === 'Expense'}
+                                />
+                            ))}
+                        </CardContent>
+                    )}
                 </Card>
                 <div className="col-start-3 col-end-6 row-start-1 row-end-4 m-2">
                     <IncomeChart/>
