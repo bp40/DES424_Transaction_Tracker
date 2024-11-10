@@ -19,6 +19,10 @@ export async function GET(request: NextRequest, response: NextResponse) {
         where: {
             userId: user.id
         },
+        take: 10,
+        orderBy: {
+            date: 'desc'
+        },
         include: {
             category: {
                 select: {
@@ -31,7 +35,8 @@ export async function GET(request: NextRequest, response: NextResponse) {
                 }
             }
         }
-    })
+    });
+
 
     return NextResponse.json(transactions)
 }
