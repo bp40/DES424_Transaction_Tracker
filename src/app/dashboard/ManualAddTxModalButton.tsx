@@ -16,11 +16,25 @@ import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {revalidatePath} from "next/cache";
+import prisma from "@/lib/db";
+import {useEffect, useState} from "react";
 
 
 const ManualAddTxModalButton = () => {
 
-    const categories = ["Food", "Entertainment", "Transportation"] as const
+    const [categories, setCategories] = useState([])
+
+    useEffect(() => {
+        fetch("/api/categories")
+            .then(res => res.json())
+            .then(data => {
+                setCategories(data.map((category: { name: string; }) => category.name))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }, [])
+
     const methods = ["Cash", "Credit Card", "Bank Transfer", "Debit Card"] as const
 
     const formSchema = z.object({
