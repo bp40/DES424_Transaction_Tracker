@@ -73,3 +73,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+.heading {
+  font-size: 1rem; /* Default font size for all screens */
+  font-weight: 800;    /* Bold font weight */
+}
+
+@media (min-width: 1024px) {
+  .heading {
+    font-size: 1.5rem; /* Adjust for larger screens, if needed */
+  }
+}

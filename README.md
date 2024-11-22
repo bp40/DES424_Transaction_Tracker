@@ -46,6 +46,9 @@ This is a transaction tracking application that aims to be easy to use and provi
 
 The project will be hosted on AWS during the peroid of the course.
 
+user: user@example.com
+pass: 123456
+
 
 
 
