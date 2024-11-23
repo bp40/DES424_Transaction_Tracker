@@ -105,7 +105,7 @@ const Dashboard = () => {
                     <ManualAddTxModalButton/>
                 </div>
             </div>
-            <div className="flex flex-wrap h-screen sm:grid sm:grid-cols-5 sm:grid-rows-5 gap-4 content-center m-8">
+            <div className="flex flex-wrap h-screen sm:grid sm:grid-cols-5 sm:grid-rows-2 gap-4 content-center m-8">
                 <div className="grid grid-cols-subgrid gap-4 col-span-2 row-span-2 h-full">
                     {summaryInfo.map((info) => (
                         <DashboardCard
@@ -117,7 +117,7 @@ const Dashboard = () => {
                         />
                     ))}
                 </div>
-                <Card className="col-start-1 col-end-3 row-start-3 row-end-6 m-2">
+                <Card className="col-start-1 col-end-3 row-start-1 row-end-7 m-2">
                     <CardHeader>
                         <CardTitle
                             onClick={() => router.push("/transactions")}
@@ -157,7 +157,7 @@ const Dashboard = () => {
                 <div className="col-start-3 col-end-6 row-start-1 row-end-4 m-2">
                     <IncomeChart/>
                 </div>
-                <div className="col-start-3 col-end-6 row-start-4 row-end-6 m-2 h-full my-2">
+                <div className="col-start-3 col-end-6 row-start-2 row-end-2 m-2 h-full my-2">
                     <Card>
                         <CardHeader>
                             <CardTitle> Transaction Trends </CardTitle>
