@@ -11,6 +11,7 @@ import {Spinner} from "@/components/ui/spinner";
 
 import {z} from "zod";
 import {redirect, useRouter} from "next/navigation";
+import UploadImageModal from "@/app/dashboard/UploadImageModal";
 
 interface Category {
     name: string;
@@ -101,7 +102,7 @@ const Dashboard = () => {
                 <h1 className="mx-6 scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-3xl "> Welcome,
                     user! </h1>
                 <div>
-                    <Button className="mx-2"> Import from QR-Payment Slip</Button>
+                    {/*<UploadImageModal/>*/}
                     <ManualAddTxModalButton/>
                 </div>
             </div>
