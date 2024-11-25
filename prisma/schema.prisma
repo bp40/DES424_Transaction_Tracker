@@ -111,7 +111,7 @@ model Transaction {
   method         TransactionMethod?
   type           TransactionType
   payee          String             @default("")
-  image          Bytes?
+  imageUrl       String?
   createdAt      DateTime           @default(now())
 
   // Relations

@@ -81,7 +81,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
                 payee: data.payee,
                 method: data.method,
                 type: data.expense ? "Expense" : "Income",
-                image: data.image ? data.image : null,
+                imageUrl: data.imageUrl ? data.imageUrl : null,
             },
         })
 
