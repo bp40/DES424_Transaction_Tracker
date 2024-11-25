@@ -106,7 +106,7 @@ const Navbar = () => {
                             LOGO
                             <span className="sr-only">Acme Inc</span>
                         </Link>
-                        <nav className="hidden md:flex gap-4">
+                        <nav className="hidden md:flex gap-8">
                             <Link
                                 href={{
                                     pathname: "/",
@@ -123,7 +123,7 @@ const Navbar = () => {
                                 className="font-medium flex items-center text-sm transition-colors hover:underline"
                                 prefetch={false}
                             >
-                                Dashboard
+                                My Dashboard
                             </Link>
                             <Link
                                 href={{
@@ -136,7 +136,7 @@ const Navbar = () => {
                             </Link>
                         </nav>
                         <div className="flex items-center gap-4">
-                            <Button variant="outline" size="sm" onClick={handleSignout}> Sign out </Button>
+                            <Button variant="outline" size="sm" onClick={() => router.push("/profile")}> Profile page test </Button>
                         </div>
                     </div>
                 </div>
