@@ -44,6 +44,19 @@ const methodColors = {
     debitcard: 'bg-cyan-500',
 };
 
+const handleDelete = (itemId: number) => {
+    fetch(`/api/transactions?id=${itemId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+}
+
+const handleAddImage = (itemId: number) => {
+
+}
+
 // https://ui.shadcn.com/docs/components/data-table
 export const columns: ColumnDef<Transaction>[] = [
     {
@@ -186,14 +199,9 @@ export const columns: ColumnDef<Transaction>[] = [
                     <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
-                            onClick={() => alert("TODO: implement delete")}
+                            onClick={() => handleDelete(parseInt(row.original.id))}
                         >
                             Delete Transaction
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            onClick={() => alert("TODO: implement edit")}
-                        >
-                            Edit Transaction
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
