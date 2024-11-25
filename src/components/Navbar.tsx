@@ -136,7 +136,8 @@ const Navbar = () => {
                             </Link>
                         </nav>
                         <div className="flex items-center gap-4">
-                            <Button variant="outline" size="sm" onClick={() => router.push("/profile")}> Profile page test </Button>
+                            <Button variant="outline" size="sm" onClick={() => router.push("/profile")}> Profile </Button>
+                            <Button variant="outline" size="sm" onClick={handleSignout}> Sign out </Button>
                         </div>
                     </div>
                 </div>
