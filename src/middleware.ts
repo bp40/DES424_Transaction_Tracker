@@ -1,6 +1,5 @@
 import {NextRequest, NextResponse} from 'next/server';
 import {createClient} from "@/utils/supabase/server";
-import prisma from "@/lib/db";
 
 export async function middleware(request: NextRequest) {
 
@@ -35,5 +34,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/api/:path*', '/dashboard'], // Matches all routes under /api/*
+    matcher: ['/api/:path*', '/dashboard', '/profile'], // Matches all routes under /api/*
 };

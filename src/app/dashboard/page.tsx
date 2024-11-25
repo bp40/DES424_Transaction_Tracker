@@ -11,7 +11,9 @@ import {Spinner} from "@/components/ui/spinner";
 
 import {z} from "zod";
 import {redirect, useRouter} from "next/navigation";
-import UploadImageModal from "@/app/dashboard/UploadImageModal";
+import AddBudgetModalButton from "@/app/dashboard/AddBudgetModalButton";
+import {Progress} from "@/components/ui/progress";
+import {revalidatePath} from "next/cache";
 
 interface Category {
     name: string;
@@ -32,6 +34,14 @@ interface Transaction {
     userCategory: Category | null; // Assuming userCategory is either null or a Category
 }
 
+interface Budget {
+    id: number;
+    userId: number;
+    category: Category
+    amount: number;
+    createdAt: string; // ISO string format for the created date
+}
+
 type TransactionList = Transaction[];
 
 const Dashboard = () => {
@@ -43,6 +53,7 @@ const Dashboard = () => {
         {title: "Net Income", amount: 0, percentage: 0},
     ])
 
+    const [budgets, setbudgets] = useState<Budget[]>([])
     const [transactions, setTransactions] = useState<TransactionList>([])
     const [isTransactionsLoading, setIsTransactionsLoading] = useState(true)
     const [isSummaryLoading, setIsSummaryLoading] = useState(true)
@@ -78,23 +89,30 @@ const Dashboard = () => {
                 console.log(err)
                 setIsSummaryLoading(false)
             })
+
+        fetch("/api/budget")
+            .then(res => res.json())
+            .then(data => {
+                setbudgets(data)
+                setIsSummaryLoading(false)
+            })
+            .catch(err => {
+                console.log(err)
+                setIsSummaryLoading(false)
+            })
     }, [])
 
     const methods = ["Cash", "Credit Card", "Bank Transfer", "Debit Card"] as const
 
-    const formSchema = z.object({
-        amount: z.coerce.number({
-            required_error: "Amount is required"
-        }).min(1, {
-            message: "Amount must be greater than 0"
-        }),
-        category: z.number(),
-        date: z.string().refine(date => !isNaN(Date.parse(date)), {message: "Invalid date"}),
-        method: z.enum(methods),
-        payee: z.string(),
-        expense: z.boolean(),
-        note: z.string(),
-    });
+    const handleDeleteBudget = (budgetId: number) => {
+        fetch(`/api/budget?id=${budgetId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        router.refresh()
+    }
 
     return (
         <div className="py-20 h-screen justify-center">
@@ -103,6 +121,7 @@ const Dashboard = () => {
                     user! </h1>
                 <div>
                     {/*<UploadImageModal/>*/}
+                    <AddBudgetModalButton/>
                     <ManualAddTxModalButton/>
                 </div>
             </div>
@@ -124,7 +143,7 @@ const Dashboard = () => {
                             onClick={() => router.push("/transactions")}
                             className="cursor-pointer hover:underline"
                         >
-                            Recent Transactions
+                            Recent Transactions (Click to view all)
                         </CardTitle>
                     </CardHeader>
 
@@ -161,11 +180,43 @@ const Dashboard = () => {
                 <div className="col-start-3 col-end-6 row-start-4 row-end-6 m-2 h-full my-2">
                     <Card>
                         <CardHeader>
-                            <CardTitle> Transaction Trends </CardTitle>
+                            <CardTitle> Monthly Budget Watch </CardTitle>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="max-h-96 overflow-y-auto">
+                            {budgets.map((budget) => {
+                                // Filter transactions for this budget category that are from the current month and year
+                                const filteredTransactions = transactions.filter(transaction => {
+                                    const date = new Date(transaction.date);
+                                    return (
+                                        date.getMonth() === new Date().getMonth() &&
+                                        date.getFullYear() === new Date().getFullYear() &&
+                                        transaction.category.name === budget.category.name // Match the category name
+                                    );
+                                });
 
+                                // Sum the amounts of these filtered transactions
+                                const totalSpent = filteredTransactions.reduce((sum, transaction) => sum + parseInt(transaction.amount), 0);
+
+                                return (
+                                    <div key={budget.category.name} className="mb-5 p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-md">
+                                        <div className="flex flex-col gap-2">
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-lg font-semibold text-gray-800">{budget.category.name}</span>
+                                                <Button variant="destructive" size="sm" onClick={() => handleDeleteBudget(budget.id)}> Delete </Button>
+                                            </div>
+                                            <span className="text-base text-gray-600">({totalSpent}/{budget.amount}):</span>
+                                            <Progress
+                                                value={parseInt(totalSpent) / 100}
+                                                max={budget.amount / 100}
+                                                className="w-full h-2 rounded-full bg-gray-300"
+                                            />
+                                        </div>
+                                    </div>
+                                );
+
+                            })}
                         </CardContent>
+
                     </Card>
                 </div>
             </div>
