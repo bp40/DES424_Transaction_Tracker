@@ -27,6 +27,8 @@ export type Transaction = {
     method: string
     category: Category
     expense: boolean
+    imageUrl: string
+    note: string
 }
 
 const categoryColors = {
@@ -51,10 +53,6 @@ const handleDelete = (itemId: number) => {
             "Content-Type": "application/json",
         },
     })
-}
-
-const handleAddImage = (itemId: number) => {
-
 }
 
 // https://ui.shadcn.com/docs/components/data-table
@@ -148,7 +146,10 @@ export const columns: ColumnDef<Transaction>[] = [
                 year: "numeric",
                 month: "long",
                 day: "numeric",
-            })
+            }) + " " + date.toLocaleTimeString("en-GB", {
+                hour: "2-digit",
+                minute: "2-digit"
+            });
         },
     },
     {
@@ -171,27 +172,58 @@ export const columns: ColumnDef<Transaction>[] = [
         accessorKey: "category",
         header: "Category",
         cell: ({ row }) => {
-            const category = row.original.category.name || "N/A";
+            try {
+                const category = row.original.category.name || "N/A";
 
-            // Get the category color, default to gray if not found
-            const categoryColor = categoryColors[category.toLowerCase()] || 'bg-gray-500';
+                // Get the category color, default to gray if not found
+                const categoryColor = categoryColors[category.toLowerCase()] || 'bg-gray-500';
 
+                return (
+                    <Badge className={`text-white ${categoryColor}`}>
+                        {category}
+                    </Badge>
+                );
+            } catch (error) {
+                console.log(error)
+                return <div>N/A</div>
+            }
+
+        },
+    },
+    {
+        accessorKey: "image",
+        header: "Image",
+        cell: ({ row }) => {
+            if (!row.original.imageUrl) {
+                return <div>N/A</div>
+            }
             return (
-                <Badge className={`text-white ${categoryColor}`}>
-                    {category}
-                </Badge>
-            );
+                <a href={row.original.imageUrl} target="_blank" rel="noopener noreferrer">
+                    <img
+                        src={row.original.imageUrl}
+                        alt="Transaction Image"
+                        className="w-10 h-10 rounded-full cursor-pointer"
+                    />
+                </a>
+            )
+        },
+    },
+    {
+        accessorKey: "note",
+        header: "Note",
+        cell: ({ row }) => {
+            return row.original.note || "N/A"
         },
     },
     {
         id: "actions",
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const payment = row.original
 
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
+                    <Button variant="ghost" className="h-8 w-8 p-0">
                             <span className="sr-only">Open menu</span>
                             <MoreHorizontal className="h-4 w-4" />
                         </Button>

@@ -39,7 +39,7 @@ const ManualAddTxModalButton = () => {
 
     const [user, setUser] = useState<User>(null)
     const [image, setImage] = useState(null)
-    const [categories, setCategories] = useState([])
+    const [categories, setCategories] = useState<Category[]>([])
     const {register, handleSubmit, formState: {errors, isSubmitting}} = useForm<FormFields>();
 
     const supabase = createClient()

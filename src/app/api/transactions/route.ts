@@ -74,8 +74,8 @@ export async function POST(request: NextRequest, response: NextResponse) {
             data: {
                 userId: user.id,
                 amount: data.amount,
-                categoryId: data.category,
-                userCategoryId: data.userCategoryId,
+                categoryId: parseInt(data.categoryId),
+                userCategoryId: parseInt(data.userCategoryId),
                 date: data.date,
                 note: data.note ? data.note : null,
                 payee: data.payee,
