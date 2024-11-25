@@ -1,1 +1,7 @@
 node_modules
+Dockerfile
+README.md
+.next
+.git
+__tests__
+jest.config.ts

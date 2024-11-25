@@ -102,7 +102,7 @@ const Dashboard = () => {
                 <h1 className="mx-6 scroll-m-20 text-2xl font-extrabold tracking-tight lg:text-3xl "> Welcome,
                     user! </h1>
                 <div>
-                    <UploadImageModal/>
+                    {/*<UploadImageModal/>*/}
                     <ManualAddTxModalButton/>
                 </div>
             </div>

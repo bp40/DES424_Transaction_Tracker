@@ -1,8 +1,8 @@
 import {NextRequest, NextResponse} from 'next/server';
 import {createClient} from "@/utils/supabase/server";
+import prisma from "@/lib/db";
 
 export async function middleware(request: NextRequest) {
-    console.log("API middleware triggered");
 
     const supabase = createClient();
 

@@ -74,12 +74,14 @@ export async function POST(request: NextRequest, response: NextResponse) {
             data: {
                 userId: user.id,
                 amount: data.amount,
-                categoryId: data.category,
+                categoryId: parseInt(data.categoryId),
+                userCategoryId: parseInt(data.userCategoryId),
                 date: data.date,
                 note: data.note ? data.note : null,
                 payee: data.payee,
                 method: data.method,
                 type: data.expense ? "Expense" : "Income",
+                imageUrl: data.imageUrl ? data.imageUrl : null,
             },
         })
 
@@ -89,5 +91,70 @@ export async function POST(request: NextRequest, response: NextResponse) {
         return NextResponse.json({message: 'Transaction creation failed'}, {status: 500})
     }
 
+}
 
+export async function DELETE(request: NextRequest, response: NextResponse) {
+
+    const supabaseId = request.headers.get("x-supabase-id")
+
+    if (!supabaseId) {
+        return NextResponse.json({message: "Error fetching user"}, {status: 401})
+    }
+
+    const user = await prisma.user.findUnique({
+        where: {
+            supabaseId: supabaseId
+        }
+    })
+
+    if (user) {
+
+        const transactionId = request.nextUrl.searchParams.get("id")
+
+        console.log("TID", transactionId)
+
+        if (!transactionId) {
+            return NextResponse.json({message: 'Transaction ID not found'}, {status: 400})
+        }
+
+
+        const delResult = prisma.transaction.delete({
+            where: {
+                id: parseInt(transactionId)
+            }
+        })
+
+        console.log(delResult.then((res) => console.log(res)))
+
+        return NextResponse.json({message: 'Transaction deleted'}, {status: 200})
+
+    }
+
+   return NextResponse.json({message: 'Error fetching user or user transactions'}, {status: 500})
+
+}
+
+export async function PUT(request: NextRequest, response: NextResponse) {
+
+    const supabaseId = request.headers.get("x-supabase-id")
+
+    if (!supabaseId) {
+        return NextResponse.json({message: "Error fetching user"}, {status: 401})
+    }
+
+    const user = await prisma.user.findUnique({
+        where: {
+            supabaseId: supabaseId
+        }
+    })
+
+    if (user) {
+
+        const transactionId = request.nextUrl.searchParams.get("id")
+
+        if (!transactionId) {
+            return NextResponse.json({message: 'Transaction ID not found'}, {status: 400})
+        }
+
+    }
 }
