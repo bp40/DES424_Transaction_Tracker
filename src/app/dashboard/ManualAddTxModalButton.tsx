@@ -107,7 +107,7 @@ const ManualAddTxModalButton = () => {
                 console.log(error)
             }
 
-            const { data: signedUrl } = await supabase.storage
+            const {data: signedUrl} = await supabase.storage
                 .from('transaction-user-upload')
                 .createSignedUrl(data.path, 60 * 60 * 24 * 365);
 
