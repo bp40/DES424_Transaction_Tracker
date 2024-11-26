@@ -40,7 +40,12 @@ const ManualAddTxModalButton = () => {
     const [user, setUser] = useState<User>(null)
     const [image, setImage] = useState(null)
     const [categories, setCategories] = useState<Category[]>([])
-    const {register, handleSubmit, formState: {errors, isSubmitting}} = useForm<FormFields>();
+    const {register, handleSubmit, formState: {errors, isSubmitting}, watch} = useForm<FormFields>({
+        defaultValues: {
+            type: 'expense'
+        }
+    });
+    const selectedOption = watch('type');
 
     const supabase = createClient()
 
@@ -212,7 +217,7 @@ const ManualAddTxModalButton = () => {
                             <input
                                 type="radio"
                                 id="expense"
-                                value="expense"
+                                value="Expense"
                                 {...register('type')}
                                 className="ml-2"
                             />
@@ -222,7 +227,7 @@ const ManualAddTxModalButton = () => {
                             <input
                                 type="radio"
                                 id="income"
-                                value="income"
+                                value="Income"
                                 {...register('type')}
                                 className="ml-2"
                             />

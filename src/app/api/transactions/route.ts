@@ -80,7 +80,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
                 note: data.note ? data.note : null,
                 payee: data.payee,
                 method: data.method,
-                type: data.expense ? "Expense" : "Income",
+                type: data.type,
                 imageUrl: data.imageUrl ? data.imageUrl : null,
             },
         })
