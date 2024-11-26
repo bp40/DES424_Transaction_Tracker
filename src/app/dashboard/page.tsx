@@ -189,42 +189,45 @@ const Dashboard = () => {
                             <CardTitle> Monthly Budget Watch </CardTitle>
                         </CardHeader>
                         <CardContent className="max-h-96 overflow-y-auto">
-                            {budgets.map((budget) => {
-                                // Filter transactions for this budget category that are from the current month and year
-                                const filteredTransactions = transactions.filter(transaction => {
-                                    const date = new Date(transaction.date);
+                            {budgets.length == 0 ?
+                                <p className="text-gray-500">No budgets found</p> :
+
+                                budgets.map((budget) => {
+                                    // Filter transactions for this budget category that are from the current month and year
+                                    const filteredTransactions = transactions.filter(transaction => {
+                                        const date = new Date(transaction.date);
+                                        return (
+                                            date.getMonth() === new Date().getMonth() &&
+                                            date.getFullYear() === new Date().getFullYear() &&
+                                            transaction.category.name === budget.category.name // Match the category name
+                                        );
+                                    });
+
+                                    // Sum the amounts of these filtered transactions
+                                    const totalSpent = filteredTransactions.reduce((sum, transaction) => sum + parseInt(transaction.amount), 0);
+
                                     return (
-                                        date.getMonth() === new Date().getMonth() &&
-                                        date.getFullYear() === new Date().getFullYear() &&
-                                        transaction.category.name === budget.category.name // Match the category name
-                                    );
-                                });
-
-                                // Sum the amounts of these filtered transactions
-                                const totalSpent = filteredTransactions.reduce((sum, transaction) => sum + parseInt(transaction.amount), 0);
-
-                                return (
-                                    <div key={budget.category.name}
-                                         className="mb-5 p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-md">
-                                        <div className="flex flex-col gap-2">
-                                            <div className="flex justify-between items-center">
+                                        <div key={budget.category.name}
+                                             className="mb-5 p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-md">
+                                            <div className="flex flex-col gap-2">
+                                                <div className="flex justify-between items-center">
                                                 <span
                                                     className="text-lg font-semibold text-gray-800">{budget.category.name}</span>
-                                                <Button variant="destructive" size="sm"
-                                                        onClick={() => handleDeleteBudget(budget.id)}> Delete </Button>
+                                                    <Button variant="destructive" size="sm"
+                                                            onClick={() => handleDeleteBudget(budget.id)}> Delete </Button>
+                                                </div>
+                                                <span
+                                                    className="text-base text-gray-600">({totalSpent}/{budget.amount}):</span>
+                                                <Progress
+                                                    value={parseInt(totalSpent) / 100}
+                                                    max={budget.amount / 100}
+                                                    className="w-full h-2 rounded-full bg-gray-300"
+                                                />
                                             </div>
-                                            <span
-                                                className="text-base text-gray-600">({totalSpent}/{budget.amount}):</span>
-                                            <Progress
-                                                value={parseInt(totalSpent) / 100}
-                                                max={budget.amount / 100}
-                                                className="w-full h-2 rounded-full bg-gray-300"
-                                            />
                                         </div>
-                                    </div>
-                                );
+                                    );
 
-                            })}
+                                })}
                         </CardContent>
 
                     </Card>

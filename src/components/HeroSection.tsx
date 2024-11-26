@@ -18,9 +18,6 @@ const HeroSectionWithImage = () => {
                         {/* Buttons */}
                         <div className="mt-7 grid gap-3 w-full sm:inline-flex">
                             <Button size={"lg"}>Get started</Button>
-                            <Button variant={"outline"} size={"lg"}>
-                                Learn more
-                            </Button>
                         </div>
                         {/* End Buttons */}
 

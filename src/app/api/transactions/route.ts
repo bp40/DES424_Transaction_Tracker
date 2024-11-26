@@ -22,8 +22,6 @@ export async function GET(request: NextRequest, response: NextResponse) {
             where: {
                 userId: user.id
             },
-            take: 10,
-            skip: startFromIndex,
             orderBy: {
                 date: 'desc'
             },

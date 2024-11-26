@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import {Button} from "@/components/ui/button"
 import {
     Card,
     CardContent,
@@ -9,23 +9,42 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import {Input} from "@/components/ui/input"
+import {Label} from "@/components/ui/label"
 import Link from "next/link";
 import {login} from "@/app/auth/login/actions";
 import {useState} from "react";
 import {useRouter} from "next/navigation";
 
+type authResponse = {
+    success: boolean
+    error: string
+}
 
 const LoginPage = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState("")
     const router = useRouter()
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        login(email, password).then(r => router.push('/dashboard'))
+        setIsLoading(true)
+        login(email, password)
+            .then((r) => {
+                if (r) {
+                    if (!r.success) {
+                        setError(r.error)
+                        setIsLoading(false)
+                    } else {
+                        router.push('/dashboard')
+                    }
+                } else {
+                    router.push('/dashboard')
+                }
+            })
 
     };
 
@@ -42,19 +61,29 @@ const LoginPage = () => {
                     <CardContent className="grid gap-4">
                         <div className="grid gap-2">
                             <Label htmlFor="email">Email</Label>
-                            <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="example@mail.com" required/>
+                            <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)}
+                                   placeholder="example@mail.com" required/>
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="password">Password</Label>
-                            <Input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" required/>
+                            <Input id="password" type="password" value={password}
+                                   onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password"
+                                   required/>
                         </div>
                     </CardContent>
                     <CardFooter>
-                        <Button type="submit" className="w-full" >Login</Button>
+                        <Button type="submit" className="w-full"
+                                disabled={isLoading}> {isLoading ? "Loading..." : "Login"}</Button>
                     </CardFooter>
                 </form>
+
                 <div className="flex justify-center pb-2">
-                    Don’t have an account yet? <Link href="/auth/signup" className="font-bold underline"> Sign up </Link>
+                    {error && <p className="text-red-500">{error}</p>}
+                </div>
+
+                <div className="flex justify-center pb-2">
+                    Don’t have an account yet? <Link href="/auth/signup" className="font-bold underline"> Sign
+                    up </Link>
                 </div>
 
             </Card>

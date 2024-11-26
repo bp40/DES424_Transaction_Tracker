@@ -20,6 +20,9 @@ export async function GET(request: NextRequest, response: NextResponse) {
     }
 
     const budgets = await prisma.budget.findMany({
+        where: {
+            userId: user.id
+        },
         select: {
             id: true,
             categoryId: true,
@@ -31,6 +34,8 @@ export async function GET(request: NextRequest, response: NextResponse) {
             },
         },
     });
+
+    console.log(budgets)
 
 
     return NextResponse.json(budgets)
