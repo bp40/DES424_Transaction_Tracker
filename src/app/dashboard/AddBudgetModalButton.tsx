@@ -95,6 +95,7 @@ const AddBudgetModalButton = () => {
                             {...register("amount", {required: "Amount is required"})}
                             type="number"
                             placeholder="THB per month"
+                            min={1}
                             className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                         {errors.amount && <div className="text-red-600 text-sm mt-1">{errors.amount.message}</div>}
