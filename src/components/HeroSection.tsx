@@ -29,7 +29,7 @@ const HeroSectionWithImage = () => {
                     <div className="relative ms-4">
                         <img
                             className="w-full rounded-md"
-                            src="https://placehold.co/800x700"
+                            src="https://epbciwgmyktuezeyjowg.supabase.co/storage/v1/object/sign/transaction-user-upload/home_image.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0cmFuc2FjdGlvbi11c2VyLXVwbG9hZC9ob21lX2ltYWdlLnBuZyIsImlhdCI6MTczMjYwOTMwOSwiZXhwIjoxNzY0MTQ1MzA5fQ.IxgqVAtI4ximrd8mk1_ZTk5j3jfiYhUPQ7y87iJFyp4&t=2024-11-26T08%3A21%3A49.564Z"
                             alt="Image Description"
                         />
                     </div>
