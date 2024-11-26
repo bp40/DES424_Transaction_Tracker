@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const HeroSectionWithImage = () => {
     return (
@@ -17,7 +18,9 @@ const HeroSectionWithImage = () => {
                         </p>
                         {/* Buttons */}
                         <div className="mt-7 grid gap-3 w-full sm:inline-flex">
-                            <Button id="get-started-btn" size={"lg"}>Get started</Button>
+                            <Button id="get-started-btn" size={"lg"}>
+                                <Link href="/auth/signup" className="flex items-center gap-2"> Get Started </Link>
+                            </Button>
                         </div>
                         {/* End Buttons */}
 
