@@ -11,7 +11,7 @@ import {SelectTrigger} from "@/components/ui/select-trigger"; // Assuming this f
 
 import {createClient} from '@/utils/supabase/client'
 import {View} from 'lucide-react'
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const Profile = () => {
 
@@ -20,6 +20,22 @@ const Profile = () => {
 
     const [newPassword, setNewPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+
+    const [newEmail, setNewEmail] = useState("")
+    const [confirmEmail, setConfirmEmail] = useState("")
+    
+    const [userEmail, setuserEmail] = useState<string | undefined>(undefined)
+    
+    useEffect(() => {
+
+        const getUserEmail = async () => {
+            const { data: { user } } = await supabase.auth.getUser()
+            if (user) {
+                setuserEmail(user.email)
+            }
+        }
+    getUserEmail()
+    }, [supabase.auth])
 
 
     const handleSignout = async () => {
@@ -42,18 +58,42 @@ const Profile = () => {
 
         if (newPassword !== confirmPassword) {
             alert("Passwords do not match")
-        }
-
-        const { data, error } = await supabase.auth.updateUser({
-            password: newPassword
-        })
-
-        if (error) {
-            alert("Error changing password: "+  error.name)
-            console.log(error)
         } else {
-            alert("Password changed successfully")
+            const {data, error} = await supabase.auth.updateUser({
+                password: newPassword
+            })
+
+            if (error) {
+                alert("Error changing password: " + error.name)
+                console.log(error)
+            } else {
+                alert("Password changed successfully")
+            }
         }
+    }
+
+    const handleEmailSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+
+        if (newEmail !== confirmEmail) {
+            alert("Emails do not match")
+        } else {
+
+            const { data, error } = await supabase.auth.updateUser({
+                email: newEmail
+            })
+
+
+            console.log(data)
+
+            if (error) {
+                alert("Error changing email: " + error.name)
+                console.log(error)
+            } else {
+                alert("Success! Sent confirmation email!")
+            }
+        }
+
 
     }
 
@@ -69,21 +109,16 @@ const Profile = () => {
                         <CardTitle className="text-2xl font-bold mb-4">Your Profile</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <div className="flex flex-col items-center mb-6">
-                            <div
-                                className="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center text-3xl text-white">
-                                CN
-                            </div>
-                            <Button variant="secondary" className="mt-4">
-                                Edit Profile
-                            </Button>
-                        </div>
-                        <form className="space-y-4">
-                            <Input placeholder="Enter your name"/>
-                            <Input placeholder="Enter your email"/>
-                            <Input placeholder="Enter your phone"/>
-                            <Button variant="primary" className="w-full mt-4">
-                                Save Changes
+                        <h2 className="text-xl text-gray-500 mb-4">
+                            Current email: {userEmail}
+                        </h2>
+                        <form className="space-y-4" onSubmit={handleEmailSubmit}>
+                            <Input onChange={e => setNewEmail(e.target.value)} type='email'
+                                   placeholder="Enter your new email"/>
+                            <Input onChange={e => setConfirmEmail(e.target.value)} type='email'
+                                   placeholder="Confirm your new email"/>
+                            <Button type='submit'variant="primary" className="w-full mt-4">
+                                Change Email
                             </Button>
                         </form>
                     </CardContent>
@@ -96,8 +131,10 @@ const Profile = () => {
                     </CardHeader>
                     <CardContent>
                         <form className="space-y-4" onSubmit={handleChangePassword}>
-                            <Input onChange={e => setNewPassword(e.target.value)} type='password' placeholder="Enter your new password"/>
-                            <Input onChange={e => setConfirmPassword(e.target.value)} type='password' placeholder="Confirm your new password"/>
+                            <Input onChange={e => setNewPassword(e.target.value)} type='password'
+                                   placeholder="Enter your new password"/>
+                            <Input onChange={e => setConfirmPassword(e.target.value)} type='password'
+                                   placeholder="Confirm your new password"/>
                             <Button type="submit" variant="primary" className="w-full mt-4">
                                 Change Password
                             </Button>
