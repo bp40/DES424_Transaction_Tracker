@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -47,6 +48,8 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "cypress": "^13.16.0",
+    "cypress-mochawesome-reporter": "^3.8.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.13",
     "eslint-config-prettier": "^9.1.0",
