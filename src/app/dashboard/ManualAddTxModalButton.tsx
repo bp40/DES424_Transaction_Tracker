@@ -151,7 +151,7 @@ const ManualAddTxModalButton = () => {
                         <label htmlFor="categoryId"
                                className="block text-sm font-semibold text-gray-700">Category</label>
                         <select
-                            {...register("categoryId")}
+                            {...register("categoryId", {required: "Category is required"})}
                             id="categoryId"
                             className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         >
@@ -162,16 +162,18 @@ const ManualAddTxModalButton = () => {
                                 </option>
                             ))}
                         </select>
+                        {errors.category && <div className="text-red-600 text-sm mt-1">{errors.category.message}</div>}
                     </div>
 
                     <div>
                         <label htmlFor="date" className="block text-sm font-semibold text-gray-700">Date</label>
                         <input
-                            {...register("date")}
+                            {...register("date", {required: "Date is required"})}
                             type="datetime-local"
                             placeholder="Date"
                             className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
+                        {errors.date && <div className="text-red-600 text-sm mt-1">{errors.date.message}</div>}
                     </div>
 
                     <div>
@@ -182,23 +184,25 @@ const ManualAddTxModalButton = () => {
                             placeholder="Note"
                             className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
+                        {errors.note && <div className="text-red-600 text-sm mt-1">{errors.note.message}</div>}
                     </div>
 
                     <div>
                         <label htmlFor="payee" className="block text-sm font-semibold text-gray-700">Merchant</label>
                         <input
-                            {...register("payee")}
+                            {...register("payee", {required: "Merchant is required"})}
                             type="text"
                             placeholder="Payee"
                             className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
+                        {errors.payee && <div className="text-red-600 text-sm mt-1">{errors.payee.message}</div>}
                     </div>
 
                     <div>
                         <label htmlFor="method" className="block text-sm font-semibold text-gray-700">Payment
                             Method</label>
                         <select
-                            {...register("method")}
+                            {...register("method", {required: "Payment method is required"})}
                             id="method"
                             className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         >
@@ -209,6 +213,7 @@ const ManualAddTxModalButton = () => {
                                 </option>
                             ))}
                         </select>
+                        {errors.method && <div className="text-red-600 text-sm mt-1">{errors.method.message}</div>}
                     </div>
 
                     <div className="flex space-x-4">
@@ -218,7 +223,7 @@ const ManualAddTxModalButton = () => {
                                 type="radio"
                                 id="expense"
                                 value="Expense"
-                                {...register('type')}
+                                {...register('type', {required: "Either Expense or Income is required"})}
                                 className="ml-2"
                             />
                         </div>
@@ -228,10 +233,11 @@ const ManualAddTxModalButton = () => {
                                 type="radio"
                                 id="income"
                                 value="Income"
-                                {...register('type')}
+                                {...register('type', {required: "Either Expense or Income is required"})}
                                 className="ml-2"
                             />
                         </div>
+                        {errors.type && <div className="text-red-600 text-sm mt-1">{errors.type.message}</div>}
                     </div>
 
                     <div>

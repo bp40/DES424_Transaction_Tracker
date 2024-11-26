@@ -139,7 +139,7 @@ const Dashboard = () => {
                     ) : (
                         transactions.length > 0 ? (
                                 <CardContent>
-                                    {transactions.map((transaction) => (
+                                    {transactions.slice(0,6).map((transaction) => (
                                         <TransactionListBlock
                                             key={transaction.id}
                                             amount={parseInt(transaction.amount)}
