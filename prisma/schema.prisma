@@ -72,8 +72,6 @@ model Budget {
   categoryId     Int? // Nullable
   userCategoryId Int? // Nullable
   amount         Decimal  @db.Decimal(10, 2)
-  year           Int
-  month          Int
   createdAt      DateTime @default(now())
 
   // Relations
