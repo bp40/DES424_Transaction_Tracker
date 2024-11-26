@@ -251,6 +251,14 @@ const ManualAddTxModalButton = () => {
                                 {...register('type', {required: "Expense or Income required"})}
                                 className="ml-2"
                             />
+                            <label htmlFor="recurring" className="text-sm font-semibold text-gray-700">Recurring Expense</label>
+                            <input
+                                type="radio"
+                                id="recurring"
+                                value="RecurringExpense"
+                                {...register('type', {required: "Expense or Income required"})}
+                                className="ml-2"
+                            />
                         </div>
                         {errors.type && <div className="text-red-600 text-sm mt-1">{errors.type.message}</div>}
                     </div>
