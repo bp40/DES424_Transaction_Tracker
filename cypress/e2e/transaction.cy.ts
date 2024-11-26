@@ -1,0 +1,16 @@
+describe('all transactions view and login', () => {
+    it('passes', () => {
+        cy.clearCookies()
+        cy.clearLocalStorage()
+        cy.reload()
+        cy.visit('http://localhost:3000/transactions')
+        cy.url().should('include', 'login')
+        cy.get('#email').type('test@mail.com')
+        cy.get('#password').type('123456')
+        cy.get('button').contains('Login').click()
+        cy.url({timeout: 10000}).should('include', 'dashboard')
+        cy.get('[href="/transactions"]').click()
+        cy.url({timeout: 10000}).should('include', 'transactions')
+        cy.contains('All transactions').should('be.visible')
+    })
+})
