@@ -38,9 +38,12 @@ type FormFields = {
 const ManualAddTxModalButton = () => {
 
     const [user, setUser] = useState<User>(null)
+    const [error, setError] = useState("")
+    const [isLoading, setIsLoading] = useState(false)
     const [image, setImage] = useState(null)
     const [categories, setCategories] = useState<Category[]>([])
-    const {register, handleSubmit, formState: {errors, isSubmitting}, watch} = useForm<FormFields>({
+    const [submitted, setSubmitted] = useState(false)
+    const {register, handleSubmit, formState: {errors, isSubmitting}, watch, reset} = useForm<FormFields>({
         defaultValues: {
             type: 'expense'
         }
@@ -75,6 +78,7 @@ const ManualAddTxModalButton = () => {
     const onSubmit: SubmitHandler<FormFields> = async (data) => {
         const imageUrl = await handleImageUpload()
         console.log(data)
+        setIsLoading(true)
 
         fetch('/api/transactions', {
             method: 'POST',
@@ -93,7 +97,18 @@ const ManualAddTxModalButton = () => {
                 type: data.type,
                 imageUrl: imageUrl
             })
-        })
+        }).then((res) => {
+            res.json().then((data) => {
+                setIsLoading(false)
+                if (res.status < 300)  {
+                    setSubmitted(true)
+                    reset()
+                } else {
+                    setError(data.message)
+                }
+
+            })
+        });
 
 
     }
@@ -223,7 +238,7 @@ const ManualAddTxModalButton = () => {
                                 type="radio"
                                 id="expense"
                                 value="Expense"
-                                {...register('type', {required: "Either Expense or Income is required"})}
+                                {...register('type', {required: " Expense or Income required"})}
                                 className="ml-2"
                             />
                         </div>
@@ -233,7 +248,7 @@ const ManualAddTxModalButton = () => {
                                 type="radio"
                                 id="income"
                                 value="Income"
-                                {...register('type', {required: "Either Expense or Income is required"})}
+                                {...register('type', {required: "Expense or Income required"})}
                                 className="ml-2"
                             />
                         </div>
@@ -255,13 +270,16 @@ const ManualAddTxModalButton = () => {
 
                     <div className="mt-6">
                         <Button
-                            disabled={isSubmitting}
+                            disabled={isLoading}
                             type="submit"
                             className="w-full py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                            {isSubmitting ? "Loading..." : "Submit"}
+                            {isLoading ? "Loading..." : "Submit"}
                         </Button>
                     </div>
                 </form>
+
+                {submitted && <div className="text-green-500 text-sm mt-1">Transaction added successfully</div>}
+                {error && <div className="text-red-500 text-sm mt-1">{error}</div>}
 
             </DialogContent>
         </Dialog>
