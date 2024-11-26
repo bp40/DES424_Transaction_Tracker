@@ -141,9 +141,15 @@ const Dashboard = () => {
                     <CardHeader>
                         <CardTitle
                             onClick={() => router.push("/transactions")}
-                            className="cursor-pointer hover:underline"
                         >
-                            Recent Transactions (Click to view all)
+                            <div className="flex justify-between items-center">
+                                <div className="cursor-pointer hover:underline">
+                                    Recent Transactions (Click to view all)
+                                </div>
+
+                                <Button variant="outline" size="sm"
+                                        onClick={() => window.location.reload()}> Refresh </Button>
+                            </div>
                         </CardTitle>
                     </CardHeader>
 
@@ -158,7 +164,7 @@ const Dashboard = () => {
                     ) : (
                         transactions.length > 0 ? (
                                 <CardContent>
-                                    {transactions.map((transaction) => (
+                                    {transactions.slice(0, 6).map((transaction) => (
                                         <TransactionListBlock
                                             key={transaction.id}
                                             amount={parseInt(transaction.amount)}
@@ -198,13 +204,17 @@ const Dashboard = () => {
                                 const totalSpent = filteredTransactions.reduce((sum, transaction) => sum + parseInt(transaction.amount), 0);
 
                                 return (
-                                    <div key={budget.category.name} className="mb-5 p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-md">
+                                    <div key={budget.category.name}
+                                         className="mb-5 p-4 border border-gray-300 rounded-lg bg-gray-50 shadow-md">
                                         <div className="flex flex-col gap-2">
                                             <div className="flex justify-between items-center">
-                                                <span className="text-lg font-semibold text-gray-800">{budget.category.name}</span>
-                                                <Button variant="destructive" size="sm" onClick={() => handleDeleteBudget(budget.id)}> Delete </Button>
+                                                <span
+                                                    className="text-lg font-semibold text-gray-800">{budget.category.name}</span>
+                                                <Button variant="destructive" size="sm"
+                                                        onClick={() => handleDeleteBudget(budget.id)}> Delete </Button>
                                             </div>
-                                            <span className="text-base text-gray-600">({totalSpent}/{budget.amount}):</span>
+                                            <span
+                                                className="text-base text-gray-600">({totalSpent}/{budget.amount}):</span>
                                             <Progress
                                                 value={parseInt(totalSpent) / 100}
                                                 max={budget.amount / 100}

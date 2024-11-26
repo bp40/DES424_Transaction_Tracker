@@ -127,12 +127,12 @@ const Navbar = () => {
                             </Link>
                             <Link
                                 href={{
-                                    pathname: "/documentation",
+                                    pathname: "/transactions",
                                 }}
                                 className="font-medium flex items-center text-sm transition-colors hover:underline"
                                 prefetch={false}
                             >
-                                Documentation
+                                Transactions
                             </Link>
                         </nav>
                         <div className="flex items-center gap-4">

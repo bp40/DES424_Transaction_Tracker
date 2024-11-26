@@ -54,6 +54,7 @@ const AddBudgetModalButton = () => {
         }).then(res => {
             res.json().then(data => {
                 console.log(data)
+                window.location.reload()
             })
         })
     }
