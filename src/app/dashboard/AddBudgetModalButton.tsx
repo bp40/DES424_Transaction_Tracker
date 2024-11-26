@@ -78,6 +78,7 @@ const AddBudgetModalButton = () => {
                             {...register("categoryId")}
                             id="categoryId"
                             className="w-full p-3 mt-1 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            required={true}
                         >
                             <option value="">Select a Category</option>
                             {categories.map((category: Category) => (

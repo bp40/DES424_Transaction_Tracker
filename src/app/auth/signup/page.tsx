@@ -14,16 +14,24 @@ const SignupPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState("")
     const router = useRouter()
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setIsLoading(true)
         if (password !== confirmPassword) {
             alert("Passwords do not match");
             return;
         }
 
         signup(email, password).then(r => router.push('/dashboard'))
+            .then(() => setIsLoading(false))
+            .catch(err => {
+                setError(err.message)
+                setIsLoading(false)
+            })
 
     };
 
@@ -55,7 +63,7 @@ const SignupPage = () => {
 
                     </CardContent>
                     <CardFooter>
-                        <Button className="w-full"> Sign Up </Button>
+                        <Button type='submit' className="w-full" disabled={isLoading}> {isLoading ? "Loading..." : "Sign up"}</Button>
                     </CardFooter>
                 </form>
             </Card>

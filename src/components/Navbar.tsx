@@ -53,8 +53,10 @@ const Navbar = () => {
                 <div className="w-fullpx-4">
                     <div className="flex justify-between h-14 items-center mx-5">
                         <Link href="#" className="flex items-center" prefetch={false}>
-                            LOGO
-                            <span className="sr-only">Acme Inc</span>
+                            <img
+                                className="w-10 h-8"
+                                src="https://epbciwgmyktuezeyjowg.supabase.co/storage/v1/object/sign/transaction-user-upload/logo.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0cmFuc2FjdGlvbi11c2VyLXVwbG9hZC9sb2dvLnBuZyIsImlhdCI6MTczMjYzMjI4NCwiZXhwIjoyMDQ3OTkyMjg0fQ._NtcU7qlmDbtB1Ruo-YctlPutzymNe4ye-2rexvFUxM&t=2024-11-26T14%3A44%3A44.261Z"
+                            />
                         </Link>
                         <nav className="hidden md:flex gap-4">
                             <Link
@@ -77,12 +79,12 @@ const Navbar = () => {
                             </Link>
                             <Link
                                 href={{
-                                    pathname: "/documentation",
+                                    pathname: "/transactions",
                                 }}
                                 className="font-medium flex items-center text-sm transition-colors hover:underline"
                                 prefetch={false}
                             >
-                                Documentation
+                                Transactions
                             </Link>
                         </nav>
                         <div className="flex items-center gap-4">
