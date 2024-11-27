@@ -37,16 +37,14 @@ This is a transaction tracking application that aims to be easy to use and provi
 
 1. Manual transaction add/edit/update/delete
 2. Catagories for transaction (e.g. Income, Rent, Food, Utilities, Recurring)
-3. Auto-add transaction based on Thai QR payment receipt
-4. Auto catagorization of transaction based on payee/payer (e.g. Automatically mark all QR payment to frequent restaurant to be food expenses)
-5. Dashboard overview for transactions and trends.
-6. Set spending limit and warnings
-7. Set saving goals and progress tracking
-8. Tax preparation assistance (summarize income/expense/deductibles)
+3. Image upload to S3 storage bucket
+4. Dashboard overview for transactions and trends.
+5. Set budget limit
+6. Sort transactions for easy viewing
 
 The project will be hosted on AWS during the peroid of the course.
 
-user: user@example.com
+user: test@mail.com
 pass: 123456
 
 
